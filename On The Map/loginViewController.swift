@@ -133,8 +133,8 @@ class loginViewController: UIViewController {
                 performUIUpdatesOnMain {
                     self.debugTextLabel.text = "logged in."
                     self.setUIEnabled(true)
-                    //            let controller = self.storyboard!.instantiateViewController(withIdentifier: "") as! UITabBarController
-                    //            self.present(controller, animated: true, completion: nil)
+                                let controller = self.storyboard!.instantiateViewController(withIdentifier: "mapID") as! UITabBarController
+                                self.present(controller, animated: true, completion: nil)
                 }
             } else {
                 

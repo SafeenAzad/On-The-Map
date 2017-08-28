@@ -65,13 +65,12 @@
 			isa = PBXGroup;
 			children = (
 				ED1CECA61F518B3C00951A1C /* AppDelegate.swift */,
+				ED1CECAA1F518B3C00951A1C /* Main.storyboard */,
+				ED1CECAF1F518B3C00951A1C /* LaunchScreen.storyboard */,
 				ED1CECBC1F519A1500951A1C /* GCDBlackBox.swift */,
 				ED2A06031F51ACDF00A087E5 /* Model */,
-				ED1CECA81F518B3C00951A1C /* loginViewController.swift */,
-				ED74CD411F5409980047060C /* ExtendsUIViewController.swift */,
-				ED1CECAA1F518B3C00951A1C /* Main.storyboard */,
+				ED5CBD4C1F544BC2004A1D40 /* Controllers */,
 				ED1CECAD1F518B3C00951A1C /* Assets.xcassets */,
-				ED1CECAF1F518B3C00951A1C /* LaunchScreen.storyboard */,
 				ED1CECB21F518B3C00951A1C /* Info.plist */,
 			);
 			path = "On The Map";
@@ -109,6 +108,15 @@
 			children = (
 			);
 			name = Parse;
+			sourceTree = "<group>";
+		};
+		ED5CBD4C1F544BC2004A1D40 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				ED1CECA81F518B3C00951A1C /* loginViewController.swift */,
+				ED74CD411F5409980047060C /* ExtendsUIViewController.swift */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
