@@ -60,9 +60,11 @@ class UdacityClient: NSObject {
             
             /* Make sure the data is parsed before returning it */
             
-           
+            let range = Range(5..<data!.count)
+            let newData = data?.subdata(in: range) /* subset response data! */
+            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
             
-            UdacityClient.parseJSONDataWithCompletionHandler(data!, completionHandler: completionHandler)
+            UdacityClient.parseJSONDataWithCompletionHandler(newData!, completionHandler: completionHandler)
             
             completionHandler(data as AnyObject, nil)
             
@@ -112,8 +114,11 @@ class UdacityClient: NSObject {
                 }
             }
             
-           
-            UdacityClient.parseJSONDataWithCompletionHandler(data!, completionHandler: completionHandler)
+            let range = Range(5..<data!.count)
+            let newData = data?.subdata(in: range) /* subset response data! */
+            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            
+            UdacityClient.parseJSONDataWithCompletionHandler(newData!, completionHandler: completionHandler)
         })
         
         task.resume()
@@ -166,7 +171,7 @@ class UdacityClient: NSObject {
             self.guardForHTTPResponses(response as? HTTPURLResponse) {proceed, error in
                 if error != nil {
                     
-                    completionHandler(nil, "no error")
+                    completionHandler(nil, "error")
                     
                 }
             }
@@ -197,9 +202,9 @@ class UdacityClient: NSObject {
             parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
             
         } catch {
-            completionHandler(nil, error as? String)
+            completionHandler(nil, "There is an error while parsing the result.")
         }
-        
+        print("Parsed result: \(parsedResult)")
         completionHandler(parsedResult as AnyObject, nil)
     }
     
@@ -255,14 +260,16 @@ class UdacityClient: NSObject {
     }
     
     /* Abstraction of repetive guard statements in each request function */
-    func guardForHTTPResponses(_ response: HTTPURLResponse?, completionHandler: (_ proceed: Bool, _ error: NSError?) -> Void) -> Void {
+    func guardForHTTPResponses(_ response: HTTPURLResponse?, completionHandler: (_ proceed: Bool, _ error: String?) -> Void) -> Void {
         /* GUARD: Did we get a successful response code of 2XX? */
         guard let statusCode = response?.statusCode, statusCode >= 200 && statusCode <= 299 else {
-           
-             print("Status code is not 2xx")
+            
+            print("Status code is not 2xx")
+            
+            completionHandler(false, "Account not found or invalid credentials.")
             return
-            }
-
+        }
+        
         
         completionHandler(true, nil)
     }
@@ -278,6 +285,6 @@ class UdacityClient: NSObject {
         
         return Singleton.sharedInstance
     }
-
-
+    
+    
 }

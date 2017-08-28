@@ -29,29 +29,29 @@ extension UdacityClient{
         /* Check for success */
         
         
-        taskForPOSTMethod(UdacityClient.Methods.Session, parameters: parameters!) { JSONResult, error in
-            if let error = error {
+        let _ = taskForPOSTMethod(UdacityClient.Methods.Session, parameters: parameters!) { JSONResult, error in
+            guard error == nil else {
                 
                 completionHandler(false, nil, nil, "There is an error.")
+                return
+            }
+            /* Attempt to get the session ID */
+            if let session = JSONResult?.value(forKey: UdacityClient.JSONResponseKeys.Session) {
                 
-            } else {
-                /* Attempt to get the session ID */
-                if let session = JSONResult?.value(forKey: UdacityClient.JSONResponseKeys.Session) {
+                if let sessionID = (session as AnyObject).value(forKey: UdacityClient.JSONResponseKeys.SessionID) as? String {
                     
-                    if let sessionID = (session as AnyObject).value(forKey: UdacityClient.JSONResponseKeys.SessionID) as? String {
+                    /* get the account and user from JSONResult */
+                    if let account = JSONResult?[UdacityClient.JSONResponseKeys.Account]  {
                         
-                        /* get the account and user from JSONResult */
-                        if let account = JSONResult?[UdacityClient.JSONResponseKeys.Account]  {
+                        if let IDKey = (account as AnyObject)[UdacityClient.JSONResponseKeys.IDKey] as? String {
                             
-                            if let IDKey = (account as AnyObject)[UdacityClient.JSONResponseKeys.IDKey] as? String {
-                                
-                                completionHandler(true, sessionID, IDKey, nil)
-                                
-                            }
+                            completionHandler(true, sessionID, IDKey, nil)
+                            
                         }
                     }
                 }
             }
+            
         }
     }
     /* Get the user's data */
@@ -67,7 +67,7 @@ extension UdacityClient{
         
         let method = UdacityClient.substituteKeyInMethod(UdacityClient.Methods.GetUserData, key: "id", value: IDKey)
         
-        taskForGETMethod(method!, parameters: [:]) {JSONResult, error in
+        let _ = taskForGETMethod(method!, parameters: [:]) { JSONResult, error in
             
             if error != nil {
                 completionHandler(false, "error")
@@ -96,11 +96,11 @@ extension UdacityClient{
             
         }
     }
-
+    
     func logoutOfSession(_ completionHandler: @escaping (_ success: Bool, _ error: String?) -> Void) {
         
         /* call task for delete method to log user out */
-        taskForDELETEMethod(Methods.Session) { result, error in
+        let _ = taskForDELETEMethod(Methods.Session) { result, error in
             
             if error != nil {
                 

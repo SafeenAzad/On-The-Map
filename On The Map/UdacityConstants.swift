@@ -8,13 +8,13 @@
 import Foundation
 
 extension UdacityClient{
-
-struct Constants {
     
+    struct Constants {
+        
         static let BaseURLSecure = "https://www.udacity.com/api/"
         
         // fb remaining
-    
+        
     }
     struct Methods {
         static let Session = "session"
@@ -23,13 +23,12 @@ struct Constants {
     
     
     struct ParameterKeys {
-    
-    static let Udacity = "udacity"
-    static let Username = "username"
-    static let Password = "password"
-    static let AccessToken = "access_token"
+        
+        static let Udacity = "udacity"
+        static let Username = "username"
+        static let Password = "password"
     }
-
+    
     struct URLKeys {
         static let id = "id"
     }

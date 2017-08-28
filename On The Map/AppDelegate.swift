@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: Properties
     
     var window: UIWindow?
-    
+    var userAuthenticated: Bool!
     
     // MARK: UIApplicationDelegate
     

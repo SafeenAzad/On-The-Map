@@ -16,6 +16,7 @@
 		ED1CECBD1F519A1500951A1C /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1CECBC1F519A1500951A1C /* GCDBlackBox.swift */; };
 		ED2A06021F51ACCB00A087E5 /* UdacityConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A06011F51ACCB00A087E5 /* UdacityConvenience.swift */; };
 		ED2A06081F51AD8000A087E5 /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A06071F51AD8000A087E5 /* UdacityClient.swift */; };
+		ED74CD421F5409980047060C /* ExtendsUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED74CD411F5409980047060C /* ExtendsUIViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		ED1CECBC1F519A1500951A1C /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 		ED2A06011F51ACCB00A087E5 /* UdacityConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConvenience.swift; sourceTree = "<group>"; };
 		ED2A06071F51AD8000A087E5 /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
+		ED74CD411F5409980047060C /* ExtendsUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendsUIViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				ED1CECBC1F519A1500951A1C /* GCDBlackBox.swift */,
 				ED2A06031F51ACDF00A087E5 /* Model */,
 				ED1CECA81F518B3C00951A1C /* loginViewController.swift */,
+				ED74CD411F5409980047060C /* ExtendsUIViewController.swift */,
 				ED1CECAA1F518B3C00951A1C /* Main.storyboard */,
 				ED1CECAD1F518B3C00951A1C /* Assets.xcassets */,
 				ED1CECAF1F518B3C00951A1C /* LaunchScreen.storyboard */,
@@ -180,6 +183,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED74CD421F5409980047060C /* ExtendsUIViewController.swift in Sources */,
 				ED1CECA91F518B3C00951A1C /* loginViewController.swift in Sources */,
 				ED2A06021F51ACCB00A087E5 /* UdacityConvenience.swift in Sources */,
 				ED2A06081F51AD8000A087E5 /* UdacityClient.swift in Sources */,
