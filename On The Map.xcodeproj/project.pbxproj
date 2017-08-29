@@ -17,6 +17,13 @@
 		ED2A06021F51ACCB00A087E5 /* UdacityConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A06011F51ACCB00A087E5 /* UdacityConvenience.swift */; };
 		ED2A06081F51AD8000A087E5 /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A06071F51AD8000A087E5 /* UdacityClient.swift */; };
 		ED74CD421F5409980047060C /* ExtendsUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED74CD411F5409980047060C /* ExtendsUIViewController.swift */; };
+		EDF53EF51F55608A00E8AA00 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EF41F55608A00E8AA00 /* MapViewController.swift */; };
+		EDF53EF71F5563B400E8AA00 /* locationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EF61F5563B400E8AA00 /* locationTableViewCell.swift */; };
+		EDF53EFA1F55641500E8AA00 /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EF91F55641500E8AA00 /* ListTableViewController.swift */; };
+		EDF53EFC1F55678B00E8AA00 /* ParseConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EFB1F55678B00E8AA00 /* ParseConstants.swift */; };
+		EDF53EFE1F5567A000E8AA00 /* ParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EFD1F5567A000E8AA00 /* ParseClient.swift */; };
+		EDF53F001F5567BD00E8AA00 /* ParseConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EFF1F5567BD00E8AA00 /* ParseConvenience.swift */; };
+		EDF53F021F55741E00E8AA00 /* StudentLocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53F011F55741E00E8AA00 /* StudentLocationData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +39,13 @@
 		ED2A06011F51ACCB00A087E5 /* UdacityConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConvenience.swift; sourceTree = "<group>"; };
 		ED2A06071F51AD8000A087E5 /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
 		ED74CD411F5409980047060C /* ExtendsUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendsUIViewController.swift; sourceTree = "<group>"; };
+		EDF53EF41F55608A00E8AA00 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		EDF53EF61F5563B400E8AA00 /* locationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = locationTableViewCell.swift; sourceTree = "<group>"; };
+		EDF53EF91F55641500E8AA00 /* ListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
+		EDF53EFB1F55678B00E8AA00 /* ParseConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseConstants.swift; sourceTree = "<group>"; };
+		EDF53EFD1F5567A000E8AA00 /* ParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseClient.swift; sourceTree = "<group>"; };
+		EDF53EFF1F5567BD00E8AA00 /* ParseConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseConvenience.swift; sourceTree = "<group>"; };
+		EDF53F011F55741E00E8AA00 /* StudentLocationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +83,7 @@
 				ED1CECAF1F518B3C00951A1C /* LaunchScreen.storyboard */,
 				ED1CECBC1F519A1500951A1C /* GCDBlackBox.swift */,
 				ED2A06031F51ACDF00A087E5 /* Model */,
+				EDF53EF61F5563B400E8AA00 /* locationTableViewCell.swift */,
 				ED5CBD4C1F544BC2004A1D40 /* Controllers */,
 				ED1CECAD1F518B3C00951A1C /* Assets.xcassets */,
 				ED1CECB21F518B3C00951A1C /* Info.plist */,
@@ -106,6 +121,10 @@
 		ED2A06061F51AD3800A087E5 /* Parse */ = {
 			isa = PBXGroup;
 			children = (
+				EDF53EFD1F5567A000E8AA00 /* ParseClient.swift */,
+				EDF53EFB1F55678B00E8AA00 /* ParseConstants.swift */,
+				EDF53EFF1F5567BD00E8AA00 /* ParseConvenience.swift */,
+				EDF53F011F55741E00E8AA00 /* StudentLocationData.swift */,
 			);
 			name = Parse;
 			sourceTree = "<group>";
@@ -115,6 +134,8 @@
 			children = (
 				ED1CECA81F518B3C00951A1C /* loginViewController.swift */,
 				ED74CD411F5409980047060C /* ExtendsUIViewController.swift */,
+				EDF53EF41F55608A00E8AA00 /* MapViewController.swift */,
+				EDF53EF91F55641500E8AA00 /* ListTableViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -193,11 +214,18 @@
 			files = (
 				ED74CD421F5409980047060C /* ExtendsUIViewController.swift in Sources */,
 				ED1CECA91F518B3C00951A1C /* loginViewController.swift in Sources */,
+				EDF53F021F55741E00E8AA00 /* StudentLocationData.swift in Sources */,
+				EDF53EFC1F55678B00E8AA00 /* ParseConstants.swift in Sources */,
 				ED2A06021F51ACCB00A087E5 /* UdacityConvenience.swift in Sources */,
+				EDF53EFA1F55641500E8AA00 /* ListTableViewController.swift in Sources */,
 				ED2A06081F51AD8000A087E5 /* UdacityClient.swift in Sources */,
+				EDF53EFE1F5567A000E8AA00 /* ParseClient.swift in Sources */,
 				ED1CECA71F518B3C00951A1C /* AppDelegate.swift in Sources */,
+				EDF53F001F5567BD00E8AA00 /* ParseConvenience.swift in Sources */,
 				ED1CECBB1F518D7600951A1C /* UdacityConstants.swift in Sources */,
 				ED1CECBD1F519A1500951A1C /* GCDBlackBox.swift in Sources */,
+				EDF53EF51F55608A00E8AA00 /* MapViewController.swift in Sources */,
+				EDF53EF71F5563B400E8AA00 /* locationTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +350,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "On The Map/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.SafeenAzad.On-The-Map";
@@ -334,6 +366,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "On The Map/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.SafeenAzad.On-The-Map";

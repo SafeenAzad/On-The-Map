@@ -14,7 +14,12 @@ class UdacityClient: NSObject {
     var sessionID: String? = nil
     var firstName:String? = nil
     var lastName:String? = nil
-    
+    var latitude: Double? = nil
+    var longitude: Double? = nil
+    var mapString: String? = nil
+    var mediaURL: String? = nil
+    var imageURL: String? = nil
+
     var session: URLSession
     
     override init() {
