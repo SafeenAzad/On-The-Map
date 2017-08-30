@@ -10,7 +10,7 @@ import Foundation
 
 extension ParseClient {
     struct Constants {
-        static let baseURLSecure = "https://parse.udacity.com/parse/classes"
+        static let baseURLSecure = "https://parse.udacity.com/parse/classes/"
         
         static let app_id = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let api_key = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"

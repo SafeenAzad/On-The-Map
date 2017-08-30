@@ -12,16 +12,20 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var map: MKMapView!
+    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
             /* Get shared session to be used later */
         
-         let locations = ParseClient.sharedInstance().studentData
+        if let locations = ParseClient.sharedInstance().studentData {
+
             addPinsToMap(locations)
+        }else{
+            refreshButton(self)
+        }
         
-            //refreshButton(self)
         
             map.delegate = self
             
@@ -65,11 +69,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func refreshButton(_ sender: Any) {
     
-        view.alpha = 0.4
+        indicatorView.startAnimating()
         
         
             ParseClient.sharedInstance().getMostRecentDataFromParse({success, results, error in
                 
+               
                 if success {
                     
                     /* Add pins to map for students  */
@@ -77,8 +82,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         /* remove annotations and add new ones */
                         self.map.removeAnnotations(self.map.annotations)
                       
-                        self.view.alpha = 1.0
-                        self.addPinsToMap(ParseClient.sharedInstance().studentData)
+                        self.indicatorView.stopAnimating()
+                        self.addPinsToMap(results)
                         
                     })
                     

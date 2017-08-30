@@ -15,7 +15,7 @@ extension ParseClient {
         
         let parameters: [String :AnyObject] = [ParseClient.ParameterKeys.limit : 100 as AnyObject, ParseClient.ParameterKeys.Order : "-\(ParseClient.JSONResponseKeys.updatedAt)" as AnyObject]
         
-       let _ = taskForGETMethod(Methods.StudentLocations, parameters: parameters, queryParameters: nil){ JSONResult, error in
+       let _ = taskForGETMethod(Methods.StudentLocations, parameters: nil, queryParameters: parameters){ JSONResult, error in
             if let error = error {
                 
                 completionHandler(false, nil, error)
