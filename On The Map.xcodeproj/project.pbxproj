@@ -17,6 +17,7 @@
 		ED2A06021F51ACCB00A087E5 /* UdacityConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A06011F51ACCB00A087E5 /* UdacityConvenience.swift */; };
 		ED2A06081F51AD8000A087E5 /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A06071F51AD8000A087E5 /* UdacityClient.swift */; };
 		ED74CD421F5409980047060C /* ExtendsUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED74CD411F5409980047060C /* ExtendsUIViewController.swift */; };
+		EDF47B841F5ECB4600B77720 /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF47B831F5ECB4600B77720 /* PostLocationViewController.swift */; };
 		EDF53EF51F55608A00E8AA00 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EF41F55608A00E8AA00 /* MapViewController.swift */; };
 		EDF53EF71F5563B400E8AA00 /* locationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EF61F5563B400E8AA00 /* locationTableViewCell.swift */; };
 		EDF53EFA1F55641500E8AA00 /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF53EF91F55641500E8AA00 /* ListTableViewController.swift */; };
@@ -39,6 +40,7 @@
 		ED2A06011F51ACCB00A087E5 /* UdacityConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConvenience.swift; sourceTree = "<group>"; };
 		ED2A06071F51AD8000A087E5 /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
 		ED74CD411F5409980047060C /* ExtendsUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendsUIViewController.swift; sourceTree = "<group>"; };
+		EDF47B831F5ECB4600B77720 /* PostLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLocationViewController.swift; sourceTree = "<group>"; };
 		EDF53EF41F55608A00E8AA00 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		EDF53EF61F5563B400E8AA00 /* locationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = locationTableViewCell.swift; sourceTree = "<group>"; };
 		EDF53EF91F55641500E8AA00 /* ListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				ED74CD411F5409980047060C /* ExtendsUIViewController.swift */,
 				EDF53EF41F55608A00E8AA00 /* MapViewController.swift */,
 				EDF53EF91F55641500E8AA00 /* ListTableViewController.swift */,
+				EDF47B831F5ECB4600B77720 /* PostLocationViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				ED1CECBB1F518D7600951A1C /* UdacityConstants.swift in Sources */,
 				ED1CECBD1F519A1500951A1C /* GCDBlackBox.swift in Sources */,
 				EDF53EF51F55608A00E8AA00 /* MapViewController.swift in Sources */,
+				EDF47B841F5ECB4600B77720 /* PostLocationViewController.swift in Sources */,
 				EDF53EF71F5563B400E8AA00 /* locationTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
