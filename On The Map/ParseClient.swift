@@ -7,285 +7,352 @@
 //
 
 import Foundation
-import UIKit
+import MapKit
 
 class ParseClient: NSObject {
-  //  var session: URLSession?
-    var studentData: [studentInfo]?
-    var lastPostObjectId: String?
     
-    /* Task returned for GETting data from the Parse server */
-    func taskForGETMethod (_ method: String, parameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?, completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
-        
-        var urlString = Constants.baseURLSecure + method
-        
-        /* If our request includes parameters, add those parameters to our URL */
-        if parameters != nil {
-            urlString += ParseClient.stringByEscapingParameters(parameters!, queryParameters: queryParameters)
-            print(urlString)
-        }
-        
-        
-        let request = NSMutableURLRequest(url: URL(string: urlString)!)
-        
-        request.httpMethod = HTTPRequest.GET
-        request.addValue(Constants.app_id, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Constants.api_key, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        
-        
-        /*Create a session and then a task */
-        let session = URLSession.shared
-        let task = session.dataTask(with: (request as URLRequest), completionHandler: { data, response, error in
-            if error != nil {
-                
-                completionHandler(nil, "Could not connect to the network.  Please try again.")
-                
-            } else {
-                
-                /* GUARD: Did we get a successful response code of 2XX? */
-                self.guardForHTTPResponses(response as? HTTPURLResponse) {proceed, error in
-                    if error != nil {
-                        
-                        completionHandler(nil, error)
-                        
-                    }
-                }
-                
-                
-                /* Parse the results and return in the completion handler with an error if there is one. */
-                ParseClient.parseJSONDataWithCompletionHandler(data!, completionHandler: completionHandler)
-                
-            }
-        })
-        task.resume()
-        return task
+    static let sharedInstance = ParseClient()
+    
+    var session = URLSession.shared
+    var requestToken: String? = nil
+    var objectID: String? = nil
+    var sessionID: String? = nil
+    var userID: String? = nil
+    var uniqueKey: String? = nil
+    var firstName: String? = nil
+    var lastName: String? = nil
+    var annotations = [MKPointAnnotation]()
+    
+    
+    override init() {
+        super.init()
     }
     
-     /* Task returned for POSTing data from the Parse server */
-    func taskForPOSTMethod (_ method: String, JSONBody: [String : AnyObject], completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
-        let urlString = Constants.baseURLSecure + method
-        let request = NSMutableURLRequest(url: URL(string: urlString)!)
+    /* Task returned for GETting data from the Parse server */
+    func taskForGETStudentLocations (withUniqueKey: String?, completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
         
-        request.httpMethod = HTTPRequest.POST
-        request.addValue(Constants.app_id, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Constants.api_key, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        do {
-            
-            request.httpBody = try JSONSerialization.data(withJSONObject: JSONBody, options: .prettyPrinted)
-        } catch {
-            
-            request.httpBody = nil
-            completionHandler(nil, "An error occured when sending data to the network.")
-            
+        var request:NSMutableURLRequest!
+        if withUniqueKey != nil {
+            request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22\(withUniqueKey)%22%7D")!)
+        } else {
+            request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=-updatedAt")!)
         }
         
-        /* Create a session and then a task.  Parse results if no error. */
-        let session = URLSession.shared
         
-        let task = session.dataTask(with: (request as URLRequest), completionHandler: { data, response, error in
+        
+        
+        request.httpMethod = HTTPRequest.GET
+        request.addValue(ParseParameterValues.appID, forHTTPHeaderField: HTTPHeaderField.parseAppID)
+        request.addValue(ParseParameterValues.apiKey, forHTTPHeaderField: HTTPHeaderField.parseRestApiKey)
+        
+        let task = session.dataTask(with: request as URLRequest){ (data, response, error) in
             
             if error != nil {
                 
                 completionHandler(nil, "Could not connect to the network.  Please try again."
                 )
                 
-            } else {
+            }
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
                 
-                /* GUARD: Did we get a successful response code in the realm of 2XX? */
-                self.guardForHTTPResponses(response as? HTTPURLResponse) {proceed, error in
-                    if error != nil {
-                        
-                        completionHandler(nil, error)
-                        
-                    }
-                }
-                
-                /* Parse the results and return in the completion handler with an error if there is one. */
-                ParseClient.parseJSONDataWithCompletionHandler(data!, completionHandler: completionHandler)
+                completionHandler(nil, "Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            guard let data = data else {
+                print("Could not find the data")
+                return
                 
             }
-        })
-        task.resume()
-        return task
-    }
-
-    /* Update a user's location */
-    func taskForPUTMethod(_ method: String, objectId: String, JSONBody : [String : AnyObject], completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
-        
-        let urlString = ParseClient.Constants.baseURLSecure + method + "/" + objectId
-        
-        let request = NSMutableURLRequest(url: URL(string: urlString)!)
-        
-        request.httpMethod = HTTPRequest.PUT
-        request.addValue(Constants.app_id, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Constants.api_key, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        do {
-            
-            request.httpBody = try JSONSerialization.data(withJSONObject: JSONBody, options: .prettyPrinted)
-            
-        } catch {
-            request.httpBody = nil
-            completionHandler(nil, "An error occured when sending data to the network.")
+            let range = Range(uncheckedBounds: (5, data.count))
+            let newData = data.subdata(in: range)
+            print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
+            self.convertData(newData, completionHandlerForConvertData: completionHandler)
             
         }
         
-        /*Create a session and then a task.  Parse results if no error. */
-        let session = URLSession.shared
+        task.resume()
+        return task
+    }
+    
+     /* Task returned for POSTing data from the Parse server */
+    func taskForPOSTSession (jsonBody: [String : AnyObject], completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
         
-        let task = session.dataTask(with: (request as URLRequest), completionHandler: { data, response, error in
+        let userInfo = [JSONBodyKeys.udacityKey:jsonBody]
+        var info: Data!
+        do{
+            info = try JSONSerialization.data(withJSONObject: userInfo, options: JSONSerialization.WritingOptions.prettyPrinted)
+        } catch {
+            print("Cannot encode the data")
+        }
+
+        let method = Methods.session
+        let urlString = Constants.getSessionURL + method
+        let sessionURL = URL(string: urlString)
+        let request = NSMutableURLRequest(url: sessionURL!)
+        
+        request.httpMethod = HTTPRequest.POST
+        request.addValue(Constants.applicationJSON, forHTTPHeaderField: HTTPHeaderField.acceptField)
+        request.addValue(Constants.applicationJSON, forHTTPHeaderField: HTTPHeaderField.contentType)
+        request.httpBody = info
+        
+       
+        let task = session.dataTask(with: request as URLRequest){ (data, response, error) in
             
             if error != nil {
                 
-                completionHandler(nil, "Could not connect to the network.  Please try again.")
-                
-            } else {
-                
-                /* GUARD: Did we get a successful response code of 2XX? */
-                self.guardForHTTPResponses(response as? HTTPURLResponse) {proceed, error in
-                    if error != nil {
-                        
-                        completionHandler(nil, error)
-                        
-                    }
-                }
-                
-                /* Parse the results and return in the completion handler with an error if there is one. */
-                ParseClient.parseJSONDataWithCompletionHandler(data!, completionHandler: completionHandler)
+                completionHandler(nil, "Could not connect to the network.  Please try again."
+                )
                 
             }
-        })
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                
+                completionHandler(nil, "Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            guard let data = data else {
+                print("Could not find the data")
+                return
+
+            }
+            let range = Range(uncheckedBounds: (5, data.count))
+            let newData = data.subdata(in: range)
+            print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
+            self.convertData(newData, completionHandlerForConvertData: completionHandler)
+            
+            }
+        
         task.resume()
         return task
-        
-    }
-
-    /* Helper Function: Convert JSON to a Foundation object */
-    class func parseJSONDataWithCompletionHandler(_ data: Data, completionHandler: (_ result: AnyObject?, _ error: String?) -> Void) {
-        
-        var parsedResult: AnyObject!
-        do {
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
-        } catch {
-            completionHandler(nil, "An error occured while getting data from the network.")
-        }
-        
-        completionHandler(parsedResult, nil)
     }
     
-    /* Helper Function: Given an optional dictionary of parameters and an optional dictionary of query parameters, convert to a URL encoded string */
-    class func stringByEscapingParameters(_ parameters: [String : AnyObject]?, queryParameters: [String : AnyObject]?) -> String {
-        print(parameters!)
-        var components = [String]()
+    func taskForDeleteSession (_ method: String, completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
+    
+        let urlString = Constants.getSessionURL + method
+        let url = URL(string: urlString)
+        let request = NSMutableURLRequest(url: url!)
+        request.httpMethod = HTTPRequest.DELETE
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
         
-        
-        if parameters != nil {
-            components.append(URLString(fromParameters: parameters!, withSeperator: ":"))
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+
+        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            if error != nil {
+                completionHandler(nil, "There is an error.")
+            }
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                print("The status code is not in order of 2xx")
+                return
+            }
+            
+            print (statusCode)
+            
+            guard let data = data else {
+                print("Cannot find the data")
+                return
+            }
+            
+            let range = Range(uncheckedBounds: (5, data.count))
+            let newData = data.subdata(in: range)
+            print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
+            self.convertData(newData, completionHandlerForConvertData: completionHandler)
         }
         
-        if queryParameters != nil {
-            components.append(URLString(fromParameters: queryParameters!, withSeperator: "="))
+        task.resume()
+        return task
+
+    }
+      func taskForPOSTStudentLocation(jsonBody : [String : AnyObject], completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
+        
+        let userInfo = jsonBody
+        var info: Data!
+        do{
+            info = try JSONSerialization.data(withJSONObject: userInfo, options: JSONSerialization.WritingOptions.prettyPrinted)
+        } catch {
+            print("Cannot encode the data")
         }
         
-        return (!components.isEmpty ? "?" : "") + components.joined(separator: "&")
+        let request = NSMutableURLRequest(url: parseURLFromParameters([:],withPathExtension: nil))
+        request.httpMethod = HTTPRequest.POST
+        request.addValue(HTTPHeaderField.parseAppID, forHTTPHeaderField: ParseParameterValues.apiKey)
+        request.addValue(HTTPHeaderField.parseRestApiKey, forHTTPHeaderField:ParseParameterValues.appID)
+        request.addValue(Constants.applicationJSON, forHTTPHeaderField: HTTPHeaderField.contentType)
+        request.httpBody = info
         
+        let task = session.dataTask(with: request as URLRequest) {(data,response,error) in
+
+            if error != nil {
+                
+                completionHandler(nil, "There is an error.")
+            }
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                print("The status code is not in order of 2xx")
+                return
+            }
+            
+            print(statusCode)
+            guard let data = data else {
+                print("Could not find the data")
+                return
+            }
+            
+            let range = Range(uncheckedBounds: (5, data.count))
+            let newData = data.subdata(in: range)
+            self.convertData(newData, completionHandlerForConvertData: completionHandler)
+            
+        }
+        task.resume()
+        return task
+
+    }
+    func taskForGETUsersData(completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) {
+        
+        let urlString = Constants.getSessionURL + Methods.users+"/\(userID!)"
+        let url = URL(string: urlString)
+        let request = NSMutableURLRequest(url: url!)
+        let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            
+            if error != nil {
+            
+                completionHandler(nil, "There was an error with the request")
+            }else {
+                guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                    print("The status code is not in order of 2xx")
+                    return
+
+                }
+                print(statusCode)
+                guard let data = data else {
+                    print("Cannot find the user's data")
+                    return
+                }
+                
+                let range = Range(uncheckedBounds: (5,data.count))
+                let newData = data.subdata(in: range)
+                print(NSString(data:newData, encoding:String.Encoding.utf8.rawValue)!)
+                self.convertData(newData, completionHandlerForConvertData: completionHandler)
+            }
+        }
+        task.resume()
+    }
+    
+    
+    func taskForPUTStudentLocation(jsonBody:[String:AnyObject], method:String, completionHandler: @escaping(_ results:AnyObject?,_ error: String?) -> Void) -> URLSessionDataTask {
+        
+        let request = NSMutableURLRequest(url: parseURLFromParameters([:], withPathExtension: method))
+        request.httpMethod = HTTPRequest.PUT
+        let userInfo = jsonBody
+        var info: Data!
+        do{
+            info = try JSONSerialization.data(withJSONObject: userInfo, options: JSONSerialization.WritingOptions.prettyPrinted)
+        } catch {
+            print("Cannot encode the data")
+        }
+        request.addValue(HTTPHeaderField.parseAppID, forHTTPHeaderField: ParseParameterValues.apiKey)
+        request.addValue(HTTPHeaderField.parseRestApiKey, forHTTPHeaderField: ParseParameterValues.appID)
+        request.addValue(Constants.applicationJSON, forHTTPHeaderField: HTTPHeaderField.contentType)
+        request.httpBody = info
+        
+        let task = session.dataTask(with: request as URLRequest) {(data, response, error) in
+            
+            if error != nil {
+                completionHandler(nil, "There was an error puting the data.")
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                print("The status code is not in order of 2xx")
+                return
+            }
+            
+            print(statusCode)
+            guard let data = data else {
+                print("Cannot find the data")
+                return
+            }
+            
+            let range = Range(uncheckedBounds: (5,data.count))
+            let newData = data.subdata(in: range)
+            completionHandler(newData as AnyObject,nil)
+            self.convertData(newData, completionHandlerForConvertData: completionHandler)
+        }
+        
+        task.resume()
+        return task
     }
 
-    class func URLString(fromParameters parameters: [String : AnyObject], withSeperator seperator: String) -> String {
-        var queryComponents = [(String, String)]()
+    func taskForGETMethod(_ method: String, parameters: [String:AnyObject], completionHandler: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> URLSessionDataTask {
+        
+        var parameters = parameters
+        
+        let request = NSMutableURLRequest(url: parseURLFromParameters(parameters, withPathExtension: method))
+        request.addValue(ParseParameterValues.appID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(ParseParameterValues.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        
+        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            
+            func sendError(_ error: String) {
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                completionHandler(nil, "There was an error getting the data.")
+            }
+            
+            guard (error == nil) else {
+                sendError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode , statusCode >= 200 && statusCode <= 299 else {
+                sendError("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            guard let data = data else {
+                sendError("No data was returned by the request!")
+                return
+            }
+            self.convertData(data, completionHandlerForConvertData: completionHandler)
+        }
+        task.resume()
+        return task
+    }
+
+    
+    
+    func parseURLFromParameters(_ parameters: [String: AnyObject], withPathExtension:String? = nil) -> URL {
+        
+        var components = URLComponents()
+        components.scheme = Constants.apiScheme
+        components.host = Constants.apiHost
+        components.path = Constants.apiPath + (withPathExtension ?? "")
+        components.queryItems = [URLQueryItem]()
         
         for (key, value) in parameters {
-            queryComponents += recursiveURLComponents(key, value)
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
+            components.queryItems!.append(queryItem)
         }
         
-        return (queryComponents.map {"\($0)\(seperator)\($1)" } as [String]).joined(separator: "&")
-        
+        print(components.url!)
+        return components.url!
     }
     
-    class func recursiveURLComponents(_ keyString : String, _ parameters: AnyObject) -> [(String, String)] {
-        var components: [(String, String)] = []
-        
-        if let parameterDict = parameters as? [String : AnyObject] {
-            for (key, value) in parameterDict {
-                components += recursiveURLComponents("\(keyString)[\(key)]", value)
+    private func convertData(_ data: Data, completionHandlerForConvertData: (_ result:AnyObject?,_ error: String?) -> Void) {
+        var parsedData:AnyObject!
+        do {
+            parsedData = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
+            if JSONSerialization.isValidJSONObject(parsedData) {
+                completionHandlerForConvertData(parsedData, nil)
             }
-        } else if let parameterArray = parameters as? [AnyObject] {
-            for parameter in parameterArray {
-                components += recursiveURLComponents("\(keyString)[]", parameter)
-            }
-            
-        } else {
-            components.append((escapedString(keyString), escapedString("\(parameters)")))
+        } catch {
+            completionHandlerForConvertData(nil, "Cannot parse the \(data) into json Format")
         }
-        return components
+        completionHandlerForConvertData(parsedData,nil)
     }
 
-    class func escapedString(_ string: String) -> String {
-        let escapedString = string.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-        return escapedString!
-    }
-    
-    func DictionaryForPostLocation(_ mediaURL: String, mapString: String) -> [String : AnyObject]{
-        let dictionary: [String : AnyObject] = [
-            ParseClient.JSONResponseKeys.UniqueKey : UdacityClient.sharedInstance().IDKey! as AnyObject,
-            ParseClient.JSONResponseKeys.FirstName : UdacityClient.sharedInstance().firstName! as AnyObject,
-            ParseClient.JSONResponseKeys.LastName : UdacityClient.sharedInstance().lastName! as AnyObject,
-            ParseClient.JSONResponseKeys.Latitude : UdacityClient.sharedInstance().latitude! as AnyObject,
-            ParseClient.JSONResponseKeys.Longitude : UdacityClient.sharedInstance().longitude! as AnyObject,
-            ParseClient.JSONResponseKeys.mapString : mapString as AnyObject,
-            ParseClient.JSONResponseKeys.MediaURL : mediaURL as AnyObject
-        ]
-        return dictionary
-    }
-
-/* Singleton shared instance of ParseClient */
-class func sharedInstance() -> ParseClient {
-    struct Singleton {
-        static var sharedInstance = ParseClient()
-    }
-    return Singleton.sharedInstance
-}
-
-/* Abstraction of repetive guard statements in each request function */
-func guardForHTTPResponses(_ response: HTTPURLResponse?, completionHandler: (_ proceed: Bool, _ error: String?) -> Void) -> Void {
-    /* GUARD: Did we get a successful response code of 2XX? */
-    guard let statusCode = response?.statusCode, statusCode >= 200 && statusCode <= 299 else {
-        var statusError: String?
-        
-        /* IF not, what was our status code?  Provide appropriate error message and return */
-        if let response = response {
-            if response.statusCode >= 400 && response.statusCode <= 599 {
-                statusError = "The network returned an invalid response.  Please re-enter your credentials and try again."
-            }
-        } else {
-            statusError = "Invalid response from the server. Please make sure your username and password are correct and try again."
-        }
-        completionHandler(false, statusError)
-        return
-    }
-    completionHandler(true, nil)
-}
-
-/* Shared date formatter for Parse Client dates returned */
-class var sharedDateFormatter: DateFormatter {
-    struct Singleton {
-        static let dateFormatter = Singleton.generateDateFormatter()
-        
-        static func generateDateFormatter() -> DateFormatter {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-mm-dd"
-            
-            return formatter
-        }
-    }
-    return Singleton.dateFormatter
-}
-    
 }
